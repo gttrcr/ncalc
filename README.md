@@ -4,7 +4,7 @@
 [![Coverage](https://img.shields.io/codecov/c/github/ncalc/ncalc.svg)](https://codecov.io/gh/ncalc/ncalc)
 [![Tests](https://img.shields.io/appveyor/tests/yallie/ncalc.svg)](https://ci.appveyor.com/project/yallie/ncalc/build/tests)
 
-###This fork contains a deep code refactor to contemplate operations with complex numbers and the main numerical analysis tools.
+### This fork contains a deep code refactor to contemplate operations with complex numbers and the main numerical analysis tools.
 NCalc is a mathematical expressions evaluator in .NET. NCalc can parse any expression and evaluate the result, including static or dynamic parameters and custom functions.
 
 ## Project Description
