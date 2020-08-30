@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C27AD8D7-BE62-4A13-8857-368B555D3385}"
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		NCalc.20.vsmdi = NCalc.20.vsmdi
 		NCalc.vsmdi = NCalc.vsmdi
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCalc.Play", "Evaluant.Calculator.Play\NCalc.Play.csproj", "{4183699B-5B7E-4294-9807-9709BAD86477}"
