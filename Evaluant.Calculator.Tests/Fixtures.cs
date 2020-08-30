@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 using System.Collections;
+using System.Numerics;
 
 namespace NCalc.Tests
 {
@@ -132,7 +133,7 @@ namespace NCalc.Tests
                         args.Result = (int)args.Parameters[0].Evaluate() + (int)args.Parameters[1].Evaluate();
                 };
 
-            Assert.AreEqual(10, e.Evaluate());
+            Assert.AreEqual(new Complex(10, 0), e.Evaluate());
         }
 
         [TestMethod]

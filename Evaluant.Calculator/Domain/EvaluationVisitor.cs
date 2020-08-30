@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace NCalc.Domain
 {
@@ -32,7 +33,7 @@ namespace NCalc.Domain
             throw new Exception("The method or operation is not implemented.");
         }
 
-        private static Type[] CommonTypes = new[] { typeof(Int64), typeof(Double), typeof(Boolean), typeof(String), typeof(Decimal) };
+        private static Type[] CommonTypes = new[] { typeof(Int64), typeof(Double), typeof(Boolean), typeof(String), typeof(Decimal), typeof(Complex) };
 
     /// <summary>
         /// Gets the the most precise type.
@@ -55,6 +56,11 @@ namespace NCalc.Domain
 
         public int CompareUsingMostPreciseType(object a, object b)
         {
+            if (a.GetType() == typeof(Complex) && ((Complex)a).Imaginary == 0)
+                a = ((Complex)a).Real;
+            if (b.GetType() == typeof(Complex) && ((Complex)b).Imaginary == 0)
+                b = ((Complex)b).Real;
+
             Type mpt;
             if (a == null)
             {
@@ -66,7 +72,7 @@ namespace NCalc.Domain
             {
                 mpt = GetMostPreciseType(a.GetType(), b?.GetType());
             }
-            
+
             return Comparer.Default.Compare(Convert.ChangeType(a, mpt), Convert.ChangeType(b, mpt));
         }
 
@@ -161,7 +167,7 @@ namespace NCalc.Domain
                     break;
 
                 case BinaryExpressionType.Minus:
-                    Result = Numbers.Soustract(left(), right());
+                    Result = Numbers.Soubtract(left(), right());
                     break;
 
                 case BinaryExpressionType.Modulo:
@@ -227,7 +233,7 @@ namespace NCalc.Domain
                     break;
 
                 case UnaryExpressionType.Negate:
-                    Result = Numbers.Soustract(0, Result);
+                    Result = Numbers.Soubtract(0, Result);
                     break;
 
                 case UnaryExpressionType.BitwiseNot:
@@ -281,9 +287,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Abs() takes exactly 1 argument");
 
-                    Result = Math.Abs(Convert.ToDecimal(
-                        Evaluate(function.Expressions[0]))
-                        );
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Abs(Convert.ToDecimal(Evaluate(function.Expressions[0])));
 
                     break;
 
@@ -297,7 +302,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Acos() takes exactly 1 argument");
 
-                    Result = Math.Acos(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Acos(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -311,7 +316,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Asin() takes exactly 1 argument");
 
-                    Result = Math.Asin(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Asin(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -325,7 +330,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Atan() takes exactly 1 argument");
 
-                    Result = Math.Atan(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Atan(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -339,7 +344,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Ceiling() takes exactly 1 argument");
 
-                    Result = Math.Ceiling(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Ceiling(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
 
@@ -354,7 +360,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Cos() takes exactly 1 argument");
 
-                    Result = Math.Cos(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Cos(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -368,7 +374,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Exp() takes exactly 1 argument");
 
-                    Result = Math.Exp(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Exp(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -382,7 +388,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Floor() takes exactly 1 argument");
 
-                    Result = Math.Floor(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Floor(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
 
@@ -396,7 +403,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 2)
                         throw new ArgumentException("IEEERemainder() takes exactly 2 arguments");
 
-                    Result = Math.IEEERemainder(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToDouble(Evaluate(function.Expressions[1])));
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.IEEERemainder(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToDouble(Evaluate(function.Expressions[1])));
 
                     break;
 
@@ -410,7 +418,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Ln() takes exactly 1 argument");
 
-                    Result = Math.Log(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Log(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -420,11 +428,20 @@ namespace NCalc.Domain
                 case "log":
 
                     CheckCase("Log", function.Identifier.Name);
+                    
+                    //if (function.Expressions.Length != 2)
+                    //    throw new ArgumentException("Log() takes exactly 2 arguments");
 
-                    if (function.Expressions.Length != 2)
-                        throw new ArgumentException("Log() takes exactly 2 arguments");
+                    if (function.Expressions.Length == 1)
+                        Result = Complex.Log(Evaluate(function.Expressions[0]).ToComplex());
+                    else
+                    {
+                        Complex baseValue = Evaluate(function.Expressions[1]).ToComplex();
+                        if (baseValue.Imaginary != 0)
+                            throw new ArgumentException("Log base must be a real number");
 
-                    Result = Math.Log(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToDouble(Evaluate(function.Expressions[1])));
+                        Result = Complex.Log(Evaluate(function.Expressions[0]).ToComplex(), baseValue.Real);
+                    }
 
                     break;
 
@@ -438,7 +455,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Log10() takes exactly 1 argument");
 
-                    Result = Math.Log10(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Log10(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -451,8 +468,12 @@ namespace NCalc.Domain
 
                     if (function.Expressions.Length != 2)
                         throw new ArgumentException("Pow() takes exactly 2 arguments");
-
-                    Result = Math.Pow(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToDouble(Evaluate(function.Expressions[1])));
+                    
+                    Complex power = Evaluate(function.Expressions[1]).ToComplex();
+                    if (power.Imaginary != 0)
+                        throw new ArgumentException("power must be a real number");
+                    
+                    Result = Complex.Pow(Evaluate(function.Expressions[0]).ToComplex(), power.Real);
 
                     break;
 
@@ -468,7 +489,8 @@ namespace NCalc.Domain
 
                     MidpointRounding rounding = (_options & EvaluateOptions.RoundAwayFromZero) == EvaluateOptions.RoundAwayFromZero ? MidpointRounding.AwayFromZero : MidpointRounding.ToEven;
 
-                    Result = Math.Round(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToInt16(Evaluate(function.Expressions[1])), rounding);
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Round(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToInt16(Evaluate(function.Expressions[1])), rounding);
 
                     break;
 
@@ -482,7 +504,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Sign() takes exactly 1 argument");
 
-                    Result = Math.Sign(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Sign(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
 
@@ -496,7 +519,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Sin() takes exactly 1 argument");
 
-                    Result = Math.Sin(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Sin(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -510,7 +533,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Sqrt() takes exactly 1 argument");
 
-                    Result = Math.Sqrt(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Sqrt(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -524,7 +547,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Tan() takes exactly 1 argument");
 
-                    Result = Math.Tan(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Result = Complex.Tan(Evaluate(function.Expressions[0]).ToComplex());
 
                     break;
 
@@ -538,7 +561,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Truncate() takes exactly 1 argument");
 
-                    Result = Math.Truncate(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    throw new ArgumentException("Solve problem");
+                    //Result = Complex.Truncate(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
 
