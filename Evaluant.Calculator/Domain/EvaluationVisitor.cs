@@ -94,9 +94,11 @@ namespace NCalc.Domain
 
         private static bool IsReal(object value)
         {
-            var typeCode = Type.GetTypeCode(value.GetType());
-
-            return typeCode == TypeCode.Decimal || typeCode == TypeCode.Double || typeCode == TypeCode.Single;
+            Type typeValue = value.GetType();
+            return typeValue == typeof(Decimal) || typeValue == typeof(Double) || typeValue == typeof(Single);
+            
+            //var typeCode = Type.GetTypeCode(value.GetType());
+            //return typeCode == TypeCode.Decimal || typeCode == TypeCode.Double || typeCode == TypeCode.Single;
         }
 
         public override void Visit(BinaryExpression expression)
@@ -136,9 +138,10 @@ namespace NCalc.Domain
                     break;
 
                 case BinaryExpressionType.Div:
-                    Result = IsReal(left()) || IsReal(right())
-                                 ? Numbers.Divide(left(), right())
-                                 : Numbers.Divide(Convert.ToDouble(left()), right());
+                    Result = Numbers.Divide(left(), right());
+                    //Result = IsReal(left()) || IsReal(right())
+                    //             ? Numbers.Divide(left(), right())
+                    //             : Numbers.Divide(Convert.ToDouble(left()), right());
                     break;
 
                 case BinaryExpressionType.Equal:
@@ -287,8 +290,7 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Abs() takes exactly 1 argument");
 
-                    throw new ArgumentException("Solve problem");
-                    //Result = Complex.Abs(Convert.ToDecimal(Evaluate(function.Expressions[0])));
+                    Result = Complex.Abs(Evaluate(function.Expressions[0]).ToComplex()).ToComplex();
 
                     break;
 
@@ -344,7 +346,10 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Ceiling() takes exactly 1 argument");
 
-                    throw new ArgumentException("Solve problem");
+                    Complex ceilingArg = Evaluate(function.Expressions[0]).ToComplex();
+                    Result = new Complex(Math.Ceiling(ceilingArg.Real), Math.Ceiling(ceilingArg.Imaginary));
+
+                    //throw new ArgumentException("Solve problem");
                     //Result = Complex.Ceiling(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
@@ -388,7 +393,10 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Floor() takes exactly 1 argument");
 
-                    throw new ArgumentException("Solve problem");
+                    Complex floorArg = Evaluate(function.Expressions[0]).ToComplex();
+                    Result = new Complex(Math.Floor(floorArg.Real), Math.Floor(floorArg.Imaginary));
+
+                    //throw new ArgumentException("Solve problem");
                     //Result = Complex.Floor(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
@@ -489,8 +497,13 @@ namespace NCalc.Domain
 
                     MidpointRounding rounding = (_options & EvaluateOptions.RoundAwayFromZero) == EvaluateOptions.RoundAwayFromZero ? MidpointRounding.AwayFromZero : MidpointRounding.ToEven;
 
-                    throw new ArgumentException("Solve problem");
-                    //Result = Complex.Round(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToInt16(Evaluate(function.Expressions[1])), rounding);
+                    Complex arg0 = Evaluate(function.Expressions[0]).ToComplex();
+                    Complex arg1 = Evaluate(function.Expressions[1]).ToComplex();
+                    if (arg1.Imaginary != 0)
+                        throw new ArgumentException("the number of decimal places must be a real number");
+                    else
+                        Result = new Complex(Math.Round(arg0.Real, Convert.ToInt32(arg1.Real), rounding),
+                            Math.Round(arg0.Imaginary, Convert.ToInt32(arg1.Real), rounding));
 
                     break;
 
@@ -611,6 +624,7 @@ namespace NCalc.Domain
                     bool cond = Convert.ToBoolean(Evaluate(function.Expressions[0]));
 
                     Result = cond ? Evaluate(function.Expressions[1]) : Evaluate(function.Expressions[2]);
+                    Result = Result.ToComplex().Real;
                     break;
 
                 #endregion

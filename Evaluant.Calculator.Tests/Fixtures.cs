@@ -85,25 +85,25 @@ namespace NCalc.Tests
         [TestMethod]
         public void Maths()
         {
-            Assert.AreEqual(1M, new Expression("Abs(-1)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Acos(1)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Asin(0)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Atan(0)").Evaluate());
-            Assert.AreEqual(2d, new Expression("Ceiling(1.5)").Evaluate());
-            Assert.AreEqual(1d, new Expression("Cos(0)").Evaluate());
-            Assert.AreEqual(1d, new Expression("Exp(0)").Evaluate());
-            Assert.AreEqual(1d, new Expression("Floor(1.5)").Evaluate());
-            Assert.AreEqual(-1d, new Expression("IEEERemainder(3,2)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Log(1,10)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Ln(1)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Log10(1)").Evaluate());
-            Assert.AreEqual(9d, new Expression("Pow(3,2)").Evaluate());
-            Assert.AreEqual(3.22d, new Expression("Round(3.222,2)").Evaluate());
-            Assert.AreEqual(-1, new Expression("Sign(-10)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Sin(0)").Evaluate());
-            Assert.AreEqual(2d, new Expression("Sqrt(4)").Evaluate());
-            Assert.AreEqual(0d, new Expression("Tan(0)").Evaluate());
-            Assert.AreEqual(1d, new Expression("Truncate(1.7)").Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Abs(-1)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Acos(1)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Asin(0)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Atan(0)").Evaluate());
+            Assert.AreEqual(2.ToComplex(), new Expression("Ceiling(1.5)").Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Cos(0)").Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Exp(0)").Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Floor(1.5)").Evaluate());
+            Assert.AreEqual(-1.ToComplex(), new Expression("IEEERemainder(3,2)").Evaluate()); ;
+            Assert.AreEqual(0.ToComplex(), new Expression("Log(1,10)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Ln(1)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Log10(1)").Evaluate());
+            Assert.AreEqual(9.ToComplex(), new Expression("Pow(3,2)").Evaluate());
+            Assert.AreEqual(3.22.ToComplex(), new Expression("Round(3.222,2)").Evaluate());
+            Assert.AreEqual(-1.ToComplex(), new Expression("Sign(-10)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Sin(0)").Evaluate());
+            Assert.AreEqual(2.ToComplex(), new Expression("Sqrt(4)").Evaluate());
+            Assert.AreEqual(0.ToComplex(), new Expression("Tan(0)").Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Truncate(1.7)").Evaluate());
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace NCalc.Tests
                         args.Result = (int)args.Parameters[0].Evaluate() + (int)args.Parameters[1].Evaluate();
                 };
 
-            Assert.AreEqual(new Complex(10, 0), e.Evaluate());
+            Assert.AreEqual(10.ToComplex(), e.Evaluate());
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace NCalc.Tests
                         args.Result = 3.14;
                 };
 
-            Assert.AreEqual(117.07, e.Evaluate());
+            Assert.AreEqual(117.07.ToComplex(), e.Evaluate());
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace NCalc.Tests
             eif = new Expression("if([divider] <> 0, [divided] / [divider], 0)");
             eif.Parameters["divider"] = 0;
             eif.Parameters["divided"] = 5;
-            Assert.AreEqual(0, eif.Evaluate());
+            Assert.AreEqual(0d, eif.Evaluate());
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace NCalc.Tests
         {
             var e = new Expression("Round(1.99, 2)");
 
-            Assert.AreEqual(1.99d, e.Evaluate());
+            Assert.AreEqual(1.99d.ToComplex(), e.Evaluate());
 
             e.EvaluateFunction += delegate(string name, FunctionArgs args)
             {
@@ -214,11 +214,11 @@ namespace NCalc.Tests
                                   {
                                       {"!true", false},
                                       {"not false", true},
-                                      {"2 * 3", 6},
-                                      {"6 / 2", 3d},
+                                      {"2 * 3", 6.ToComplex()},
+                                      {"6 / 2", 3.ToComplex()},
                                       {"7 % 2", 1},
-                                      {"2 + 3", 5},
-                                      {"2 - 1", 1},
+                                      {"2 + 3", 5.ToComplex()},
+                                      {"2 - 1", 1.ToComplex()},
                                       {"1 < 2", true},
                                       {"1 > 2", false},
                                       {"1 <= 2", true},
@@ -239,8 +239,8 @@ namespace NCalc.Tests
                                       {"true and false", false},
                                       {"true || false", true},
                                       {"true or false", true},
-                                      {"if(true, 0, 1)", 0},
-                                      {"if(false, 0, 1)", 1}
+                                      {"if(true, 0, 1)", 0d},
+                                      {"if(false, 0, 1)", 1d}
                                   };
 
             foreach (KeyValuePair<string, object> pair in expressions)
@@ -253,19 +253,19 @@ namespace NCalc.Tests
         [TestMethod]
         public void ShouldHandleOperatorsPriority()
         {
-            Assert.AreEqual(8, new Expression("2+2+2+2").Evaluate());
-            Assert.AreEqual(16, new Expression("2*2*2*2").Evaluate());
-            Assert.AreEqual(6, new Expression("2*2+2").Evaluate());
-            Assert.AreEqual(6, new Expression("2+2*2").Evaluate());
+            Assert.AreEqual(8.ToComplex(), new Expression("2+2+2+2").Evaluate());
+            Assert.AreEqual(16.ToComplex(), new Expression("2*2*2*2").Evaluate());
+            Assert.AreEqual(6.ToComplex(), new Expression("2*2+2").Evaluate());
+            Assert.AreEqual(6.ToComplex(), new Expression("2+2*2").Evaluate());
 
-            Assert.AreEqual(9d, new Expression("1 + 2 + 3 * 4 / 2").Evaluate());
-            Assert.AreEqual(13.5, new Expression("18/2/2*3").Evaluate());
+            Assert.AreEqual(9.ToComplex(), new Expression("1 + 2 + 3 * 4 / 2").Evaluate());
+            Assert.AreEqual(13.5.ToComplex(), new Expression("18/2/2*3").Evaluate());
         }
 
         [TestMethod]
         public void ShouldNotLoosePrecision()
         {
-            Assert.AreEqual(0.5, new Expression("3/6").Evaluate());
+            Assert.AreEqual(0.5.ToComplex(), new Expression("3/6").Evaluate());
         }
 
         [TestMethod]
@@ -331,7 +331,7 @@ namespace NCalc.Tests
         {
             Assert.AreEqual("toto", new Expression("'to' + 'to'").Evaluate());
             Assert.AreEqual("one2", new Expression("'one' + 2").Evaluate());
-            Assert.AreEqual(3M, new Expression("1 + '2'").Evaluate());
+            Assert.AreEqual(3.ToComplex(), new Expression("1 + '2'").Evaluate()); ;
         }
 
         [TestMethod]
@@ -413,12 +413,12 @@ namespace NCalc.Tests
         [TestMethod]
         public void ShouldHandleCaseSensitiveness()
         {
-            Assert.AreEqual(1M, new Expression("aBs(-1)", EvaluateOptions.IgnoreCase).Evaluate());
-            Assert.AreEqual(1M, new Expression("Abs(-1)", EvaluateOptions.None).Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("aBs(-1)", EvaluateOptions.IgnoreCase).Evaluate());
+            Assert.AreEqual(1.ToComplex(), new Expression("Abs(-1)", EvaluateOptions.None).Evaluate());
 
             try
             {
-                Assert.AreEqual(1M, new Expression("aBs(-1)", EvaluateOptions.None).Evaluate());
+                Assert.AreEqual(1.ToComplex(), new Expression("aBs(-1)", EvaluateOptions.None).Evaluate());
             }
             catch (ArgumentException)
             {
@@ -500,11 +500,11 @@ namespace NCalc.Tests
 
             var result = (IList)e.Evaluate();
 
-            Assert.AreEqual(0, result[0]);
-            Assert.AreEqual(1, result[1]);
-            Assert.AreEqual(4, result[2]);
-            Assert.AreEqual(9, result[3]);
-            Assert.AreEqual(16, result[4]);
+            Assert.AreEqual(0.ToComplex(), result[0]);
+            Assert.AreEqual(1.ToComplex(), result[1]);
+            Assert.AreEqual(4.ToComplex(), result[2]);
+            Assert.AreEqual(9.ToComplex(), result[3]);
+            Assert.AreEqual(16.ToComplex(), result[4]);
         }
 
         [TestMethod]
@@ -549,8 +549,8 @@ namespace NCalc.Tests
         [TestMethod]
         public void ShouldRoundAwayFromZero()
         {
-            Assert.AreEqual(22d, new Expression("Round(22.5, 0)").Evaluate());
-            Assert.AreEqual(23d, new Expression("Round(22.5, 0)", EvaluateOptions.RoundAwayFromZero).Evaluate());
+            Assert.AreEqual(22.ToComplex(), new Expression("Round(22.5, 0)").Evaluate());
+            Assert.AreEqual(23.ToComplex(), new Expression("Round(22.5, 0)", EvaluateOptions.RoundAwayFromZero).Evaluate());
         }
 
         [TestMethod]
@@ -563,13 +563,13 @@ namespace NCalc.Tests
             surface.Parameters["l"] = 1;
             surface.Parameters["L"] = 2;
 
-            Assert.AreEqual(6, volume.Evaluate());
+            Assert.AreEqual(6.ToComplex(), volume.Evaluate());
         }
 
         [TestMethod]
         public void ShouldHandleLongValues()
         {
-            Assert.AreEqual(40000000000 + 1f, new Expression("40000000000+1").Evaluate());
+            Assert.AreEqual((40000000000 + 1).ToComplex(), new Expression("40000000000+1").Evaluate());
         }
 
         [TestMethod]
@@ -592,20 +592,20 @@ namespace NCalc.Tests
         {
             var e = new Expression("x/2");
             e.Parameters["x"] = 2F;
-            Assert.AreEqual(typeof(float), e.Evaluate().GetType());
+            Assert.AreEqual(typeof(Complex), e.Evaluate().GetType());
 
             e = new Expression("x/2");
             e.Parameters["x"] = 2D;
-            Assert.AreEqual(typeof(double), e.Evaluate().GetType());
+            Assert.AreEqual(typeof(Complex), e.Evaluate().GetType());
 
             e = new Expression("x/2");
             e.Parameters["x"] = 2m;
-            Assert.AreEqual(typeof(decimal), e.Evaluate().GetType());
+            Assert.AreEqual(typeof(Complex), e.Evaluate().GetType());
 
             e = new Expression("a / b * 100");
             e.Parameters["a"] = 20M;
             e.Parameters["b"] = 20M;
-            Assert.AreEqual(100M, e.Evaluate());
+            Assert.AreEqual(100M.ToComplex(), e.Evaluate());
 
         }
 
@@ -624,7 +624,7 @@ namespace NCalc.Tests
             var e = new Expression("1.8 + Abs([var1])");
             e.Parameters["var1"] = 9.2;
 
-            Assert.AreEqual(11M, e.Evaluate());
+            Assert.AreEqual(11M.ToComplex(), e.Evaluate());
         }
 
         [TestMethod]
@@ -633,7 +633,7 @@ namespace NCalc.Tests
             var e = new Expression("1.8 - Abs([var1])");
             e.Parameters["var1"] = 0.8;
 
-            Assert.AreEqual(1M, e.Evaluate());
+            Assert.AreEqual(1M.ToComplex(), e.Evaluate());
         }
 
         [TestMethod]
@@ -642,7 +642,7 @@ namespace NCalc.Tests
             var e = new Expression("1.8 * Abs([var1])");
             e.Parameters["var1"] = 9.2;
 
-            Assert.AreEqual(16.56M, e.Evaluate());
+            Assert.AreEqual(16.56.ToComplex(), e.Evaluate());
         }
 
         [TestMethod]
@@ -651,7 +651,7 @@ namespace NCalc.Tests
             var e = new Expression("1.8 / Abs([var1])");
             e.Parameters["var1"] = 0.5;
 
-            Assert.AreEqual(3.6M, e.Evaluate());
+            Assert.AreEqual(3.6M.ToComplex(), e.Evaluate());
         }
     }
 }
