@@ -37,11 +37,7 @@ namespace NCalc
 
         public Expression(LogicalExpression expression, EvaluateOptions options)
         {
-            if (expression == null)
-                throw new
-                    ArgumentException("Expression can't be null", "expression");
-
-            ParsedExpression = expression;
+            ParsedExpression = expression ?? throw new ArgumentException("Expression can't be null", "expression");
             Options = options;
         }
 

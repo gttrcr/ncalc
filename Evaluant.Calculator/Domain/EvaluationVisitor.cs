@@ -33,7 +33,7 @@ namespace NCalc.Domain
             throw new Exception("The method or operation is not implemented.");
         }
 
-        private static Type[] CommonTypes = new[] { typeof(Int64), typeof(Double), typeof(Boolean), typeof(String), typeof(Decimal), typeof(Complex) };
+        private static readonly Type[] CommonTypes = new[] { typeof(Int64), typeof(Double), typeof(Boolean), typeof(String), typeof(Decimal), typeof(Complex) };
 
     /// <summary>
         /// Gets the the most precise type.
@@ -92,14 +92,14 @@ namespace NCalc.Domain
             }
         }
 
-        private static bool IsReal(object value)
-        {
-            Type typeValue = value.GetType();
-            return typeValue == typeof(Decimal) || typeValue == typeof(Double) || typeValue == typeof(Single);
-            
-            //var typeCode = Type.GetTypeCode(value.GetType());
-            //return typeCode == TypeCode.Decimal || typeCode == TypeCode.Double || typeCode == TypeCode.Single;
-        }
+        //private static bool IsReal(object value)
+        //{
+        //    Type typeValue = value.GetType();
+        //    return typeValue == typeof(Decimal) || typeValue == typeof(Double) || typeValue == typeof(Single);
+        //    
+        //    //var typeCode = Type.GetTypeCode(value.GetType());
+        //    //return typeCode == TypeCode.Decimal || typeCode == TypeCode.Double || typeCode == TypeCode.Single;
+        //}
 
         public override void Visit(BinaryExpression expression)
         {
@@ -574,8 +574,8 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Truncate() takes exactly 1 argument");
 
-                    throw new ArgumentException("Solve problem");
-                    //Result = Complex.Truncate(Convert.ToDouble(Evaluate(function.Expressions[0])));
+                    Complex arg = Evaluate(function.Expressions[0]).ToComplex();
+                    Result = new Complex(Math.Truncate(arg.Real), Math.Truncate(arg.Imaginary));
 
                     break;
 
@@ -685,8 +685,7 @@ namespace NCalc.Domain
 
         private void OnEvaluateFunction(string name, FunctionArgs args)
         {
-            if (EvaluateFunction != null)
-                EvaluateFunction(name, args);
+            EvaluateFunction?.Invoke(name, args);
         }
 
         public override void Visit(Identifier parameter)
@@ -732,8 +731,7 @@ namespace NCalc.Domain
 
         private void OnEvaluateParameter(string name, ParameterArgs args)
         {
-            if (EvaluateParameter != null)
-                EvaluateParameter(name, args);
+            EvaluateParameter?.Invoke(name, args);
         }
 
         public Dictionary<string, object> Parameters { get; set; }
