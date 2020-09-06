@@ -155,6 +155,18 @@ namespace NCalc
             return logicalExpression;
         }
 
+        public void ReplaceExpressionWithConstants()
+        {
+            if (OriginalExpression == null)
+                return;
+
+            string[] constants = { "[pi]", "[e]", "[i]" };
+            string[] value = { Math.PI.ToString().Replace(',', '.'), Math.E.ToString().Replace(',', '.'), "Sqrt(-1)" };
+
+            for (int c = 0; c < constants.Length; c++)
+                OriginalExpression = OriginalExpression.Replace(constants[c], value[c]);
+        }
+
         /// <summary>
         /// Pre-compiles the expression in order to check syntax errors.
         /// If errors are detected, the Error property contains the message.
@@ -188,6 +200,8 @@ namespace NCalc
 
         public object Evaluate()
         {
+            ReplaceExpressionWithConstants();
+            
             if (HasErrors())
             {
                 throw new EvaluationException(Error);

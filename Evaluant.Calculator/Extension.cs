@@ -18,5 +18,15 @@ namespace NCalc
 
             throw new ArgumentException("Type not found");
         }
+
+        public static Complex Round(this Complex c, int decimals)
+        {
+            return new Complex(Math.Round(c.Real, decimals), Math.Round(c.Imaginary, decimals));
+        }
+
+        public static double Range(this Random rnd, double min, double max)
+        {
+            return min + (rnd.NextDouble() * (max - min));
+        }
     }
 }

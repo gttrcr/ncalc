@@ -411,7 +411,10 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 2)
                         throw new ArgumentException("IEEERemainder() takes exactly 2 arguments");
 
-                    throw new ArgumentException("Solve problem");
+                    Complex ieeeArg = Evaluate(function.Expressions[0]).ToComplex();
+                    double expr = Convert.ToDouble(Evaluate(function.Expressions[1]));
+                    Result = new Complex(Math.IEEERemainder(ieeeArg.Real, expr), Math.IEEERemainder(ieeeArg.Imaginary, expr));
+                    
                     //Result = Complex.IEEERemainder(Convert.ToDouble(Evaluate(function.Expressions[0])), Convert.ToDouble(Evaluate(function.Expressions[1])));
 
                     break;
@@ -517,7 +520,12 @@ namespace NCalc.Domain
                     if (function.Expressions.Length != 1)
                         throw new ArgumentException("Sign() takes exactly 1 argument");
 
-                    throw new ArgumentException("Solve problem");
+                    Complex signArg = Evaluate(function.Expressions[0]).ToComplex();
+                    if (signArg.Imaginary != 0)
+                        throw new ArgumentException("Sign argument must be real");
+                    
+                    Result = new Complex(Math.Sign(signArg.Real), 0);
+
                     //Result = Complex.Sign(Convert.ToDouble(Evaluate(function.Expressions[0])));
 
                     break;
